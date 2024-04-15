@@ -1,0 +1,95 @@
+from arbol_coste import Nodo
+from queue import PriorityQueue
+
+def costo(estado_inicial, solucion):
+    solucionado = False
+    nodo_inicial = Nodo(estado_inicial, coste=0)
+    nodos_frontera = PriorityQueue()
+    nodos_visitados = set()
+
+    nodos_frontera.put(nodo_inicial)
+
+    while not solucionado and not nodos_frontera.empty():
+        #print("Contenido de la cola:")
+        #for nodo in nodos_frontera.queue:
+            #print(nodo.get_datos())
+        nodo_actual = nodos_frontera.get()
+        #print("Nodo actual vale" + str(nodo_actual.get_datos()))
+        if nodo_actual.get_datos() == solucion:
+            solucionado = True
+            return nodo_actual
+
+        # Agregar el estado del nodo actual a los visitados
+        nodos_visitados.add(tuple(nodo_actual.get_datos()))
+
+        d_n = nodo_actual.get_datos()
+        
+        # Operador izquierdo
+        hijo = [d_n[1], d_n[0], d_n[2], d_n[3], d_n[4], d_n[5], d_n[6], d_n[7]]
+        h_i = Nodo(hijo, coste=1)
+        if tuple(h_i.get_datos()) not in nodos_visitados and h_i not in nodos_frontera.queue:
+            nodos_frontera.put(h_i)
+
+        # Operadores centrales
+        hijo = [d_n[0], d_n[2], d_n[1], d_n[3], d_n[4], d_n[5], d_n[6], d_n[7]]
+        h_c1 = Nodo(hijo, coste=1)
+        
+        if tuple(h_c1.get_datos()) not in nodos_visitados and h_c1 not in nodos_frontera.queue:
+            nodos_frontera.put(h_c1)
+
+        hijo = [d_n[0], d_n[1], d_n[3], d_n[2], d_n[4], d_n[5], d_n[6], d_n[7]]
+        h_c2 = Nodo(hijo, coste=1)
+        
+        if tuple(h_c2.get_datos()) not in nodos_visitados and h_c2 not in nodos_frontera.queue:
+            nodos_frontera.put(h_c2)
+
+        hijo = [d_n[0], d_n[1], d_n[2], d_n[4], d_n[3], d_n[5], d_n[6], d_n[7]]
+        h_c3 = Nodo(hijo, coste=1)
+        
+        if tuple(h_c3.get_datos()) not in nodos_visitados and h_c3 not in nodos_frontera.queue:
+            nodos_frontera.put(h_c3)
+
+        hijo = [d_n[0], d_n[1], d_n[2], d_n[3], d_n[5], d_n[4], d_n[6], d_n[7]]
+        h_c4 = Nodo(hijo, coste=1)
+        
+        if tuple(h_c4.get_datos()) not in nodos_visitados and h_c4 not in nodos_frontera.queue:
+            nodos_frontera.put(h_c4)
+
+        hijo = [d_n[0], d_n[1], d_n[2], d_n[3], d_n[4], d_n[6], d_n[5], d_n[7]]
+        h_c5 = Nodo(hijo, coste=1)
+
+        if tuple(h_c5.get_datos()) not in nodos_visitados and h_c5 not in nodos_frontera.queue:
+            nodos_frontera.put(h_c5)
+
+        # Operador derecho
+        hijo = [d_n[0], d_n[1], d_n[2], d_n[3], d_n[4], d_n[5], d_n[7], d_n[6]]
+        h_d = Nodo(hijo, coste=1)
+        if tuple(h_d.get_datos()) not in nodos_visitados and h_d not in nodos_frontera.queue:
+            nodos_frontera.put(h_d)
+
+        nodo_actual.set_hijos([h_i, h_c1, h_c2, h_c3, h_c4, h_c5, h_d])
+        #print("Nodo actual vale " + str(nodo_actual.get_datos()) + " con costo " + str(nodo_actual.get_coste()))
+    return None  # Si no se encuentra solución
+
+if __name__ == "__main__":
+    estado_inicial = [8, 7, 6, 5, 4, 3, 2, 1]
+    solucion = [1, 2, 3, 4, 5, 6, 7, 8]
+    nodo_solucion = costo(estado_inicial, solucion)
+
+    if nodo_solucion is not None:
+        #Resultados
+        resultado = []
+        
+        coste_total = 0
+        nodo = nodo_solucion
+        while nodo.get_padre() is not None:
+            resultado.append(nodo.get_datos())
+            coste_total += nodo.get_coste() 
+            nodo = nodo.get_padre()
+
+        resultado.append(estado_inicial)
+        resultado.reverse()
+        print("Ruta de solución:", resultado)
+        print("Coste total:", coste_total)
+    else:
+        print("No se encontró solución.")
